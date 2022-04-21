@@ -80,6 +80,7 @@ public:
 		for (int i = ind; i < table.size()-1; i++)
 		{
 			table[i] = table[i + 1];
+			table[i].id--;
 		}
 		table.pop_back();
 	}
@@ -87,13 +88,14 @@ public:
 	{
 		int ind_s = ret_index(source);
 		int ind_d = ret_index(des);
-		for (int i = 0; i < table[ind_s].dest.size()-1; i++)
+		for (int i = 0; i < table[ind_s].dest.size(); i++)
 		{
-			if (table[ind_s].dest[i+1].id == ind_d)
+			if (table[ind_s].dest[i].id == ind_d)
 			{
-				for (int j = i; j < i < table[ind_s].dest.size() - 1; j++)
+				for (int j = i; j < table[ind_s].dest.size() - 1; j++)
 				{
 					table[ind_s].dest[i] = table[ind_s].dest[i + 1];
+					table[ind_s].dest[i].id--;
 				}
 				table[ind_s].dest.pop_back();
 			}
@@ -118,10 +120,22 @@ int main()
 	Graph<int, int> A;
 	A.addVertex(1);
 	A.addVertex(2);
+	A.addVertex(3);
+	A.addVertex(4);
 	//A.print();
 	A.addEdge(1, 2, 3);
-	//A.delEdge(1, 2);
+	A.delEdge(1, 2);
 	//A.delVertex(1);
 	A.print();
+	A.addEdge(2, 1, 8);
+	A.addEdge(1, 2, 3);
+	A.addEdge(3, 1, 2);
+	A.addEdge(4, 3, 9);
+	A.print();
+	A.delVertex(1);
+	A.delVertex(2);
+	A.delVertex(3);
+	A.print();
+
 	return 0;
 }
