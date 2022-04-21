@@ -5,6 +5,12 @@ template<typename TVertex, typename TEdge>
 class Graph
 {
  private:
+	 struct sv {//for deep search 
+		 int color = 0;
+		 TVertex prev;
+		 int t_open = 0;
+		 int t_close = 0;
+	 };
 	struct destination {
 		int id;
 		TVertex des;
@@ -14,6 +20,7 @@ class Graph
 		int id;
 		TVertex source;
 		vector<destination> dest;
+		sv inf;
 	};
 	vector<Vertex> table;
 public:
@@ -114,6 +121,36 @@ public:
 			cout << "}" << endl;
 		}
 	}
+	void deep_search()
+	{
+		int t = 0;
+		deep(table[0],t);
+		for (int i = 0; i < table.size(); i++)
+		{
+			if (table[i].inf.color == 0)
+			{
+				deep(table[i], t);
+			}
+		}
+	}
+	void deep(Vertex s,int &t)
+	{
+		table[s.id].inf.color = 1;
+		table[s.id].inf.t_open = t;
+		t++;
+		for (int j = 0; j < table[s.id].dest.size(); j++)
+		{
+			if (table[table[s.id].dest[j].id].inf.color == 0)
+			{
+				table[table[s.id].dest[j].id].inf.prev = table[s.id].source;
+				deep(table[table[s.id].dest[j].id], t);
+			}
+		}
+		table[s.id].inf.color = 2;
+		table[s.id].inf.t_close = t;
+		cout << table[s.id].source << endl;
+		t++;
+	}
 };
 int main()
 {
@@ -129,13 +166,10 @@ int main()
 	A.print();
 	A.addEdge(2, 1, 8);
 	A.addEdge(1, 2, 3);
+	A.addEdge(1, 4, 7);
 	A.addEdge(3, 1, 2);
 	A.addEdge(4, 3, 9);
 	A.print();
-	A.delVertex(1);
-	A.delVertex(2);
-	A.delVertex(3);
-	A.print();
-
+	A.deep_search();
 	return 0;
 }
