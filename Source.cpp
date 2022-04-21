@@ -24,10 +24,6 @@ class Graph
 	};
 	vector<Vertex> table;
 public:
-	Graph()
-	{
-
-	}
 	int ret_index(TVertex f_ver)
 	{
 		for (int i = 0; i < table.size(); i++)
@@ -151,6 +147,56 @@ public:
 		cout << table[s.id].source << endl;
 		t++;
 	}
+	void bellman_ford(TVertex source ,TVertex dest)
+	{
+
+		TEdge d[4];
+		for (int i = 0; i < table.size(); i++)
+		{
+			d[i] = 1000000000;
+		}
+		d[ret_index(source)] = 0;
+		vector<vector<TVertex>> ways(table.size());
+		/*for (int i = 0; i < table.size(); i++)
+		{
+			ways[i].push_back(source);
+		}*/
+		for (int i = 0; i < table.size(); i++)
+		{
+			for (int j = 0; j < table[i].dest.size(); j++)
+			{
+				if (d[i] + table[i].dest[j].edge < d[table[i].dest[j].id])
+				{
+					d[table[i].dest[j].id] = d[i] + table[i].dest[j].edge;
+					//if (table[i].dest[j].id == ret_index(dest) )
+					{
+						ways[table[i].dest[j].id] = ways[i];
+						ways[table[i].dest[j].id].push_back(table[i].id + 1);
+					
+					}
+				}
+			}
+		}
+		for (int i = 0; i < table.size(); i++)
+		{
+			ways[i].push_back(table[i].id+1);
+		}
+		for (int i = 0; i < table.size(); i++)
+		{
+			for (int j = 0; j < ways[i].size(); j++)
+			{
+				cout << ways[i][j] ;
+			}
+			cout<< endl;
+		}
+		cout << endl;
+		for (int i = 0;  i < ret_index(source); i++) if (d[i] == 1000000000)
+			cout << endl << source << "->" << i + 1 << "=" << "Not";
+		else cout << endl << source << "->" << i + 1 << "=" << d[i];
+		for (int i = ret_index(source)+1; i < table.size(); i++) if (d[i] == 1000000000)
+			cout << endl << source << "->" << i + 1 << "=" << "Not";
+		else cout << endl << source << "->" << i + 1 << "=" << d[i];
+	}
 };
 int main()
 {
@@ -166,10 +212,11 @@ int main()
 	A.print();
 	A.addEdge(2, 1, 8);
 	A.addEdge(1, 2, 3);
-	A.addEdge(1, 4, 7);
+	A.addEdge(2, 4, 7);
 	A.addEdge(3, 1, 2);
 	A.addEdge(4, 3, 9);
 	A.print();
 	A.deep_search();
+	A.bellman_ford(1,3);
 	return 0;
 }
